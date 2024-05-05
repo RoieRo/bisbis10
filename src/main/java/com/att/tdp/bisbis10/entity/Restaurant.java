@@ -34,10 +34,11 @@ public class Restaurant {
 
     public Restaurant() {}
 
-    public Restaurant(Long id, String name, Boolean isKosher) {
+    public Restaurant(Long id, String name, Boolean isKosher, Set<String> cuisines) {
         this.id = id;
         this.name = name;
         this.isKosher = isKosher;
+        this.cuisines = cuisines;
     }
 
     public Long getId() {

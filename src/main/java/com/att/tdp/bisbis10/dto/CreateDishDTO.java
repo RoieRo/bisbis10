@@ -1,27 +1,15 @@
 package com.att.tdp.bisbis10.dto;
 
-import java.util.Set;
-
-public class DishDTO {
-    private Long id;
+public class CreateDishDTO {
     private String name;
     private String description;
     private double price;
 
-    public DishDTO(){}
-    public DishDTO(Long id, String name, String description, double price) {
-        this.id = id;
+    public CreateDishDTO() {}
+    public CreateDishDTO(String name, String description, double price) {
         this.name = name;
         this.description = description;
         this.price = price;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
