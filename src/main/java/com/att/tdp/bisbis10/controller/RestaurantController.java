@@ -95,14 +95,13 @@ public class RestaurantController {
     }
 
     // get dishes by resturant
-//    @GetMapping("/{id}/dishes")
-//    ResponseEntity<List<DishDTO>> getDishesByRestaurant(@PathVariable Long id) {
-//        try {
-//            List<DishDTO> dishes = restaurantsService.getDishesByRestaurantId(id);
-//            return ResponseEntity.ok(dishes);
-//        } catch (EntityNotFoundException e) {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
-
+    @GetMapping("/{id}/dishes")
+    ResponseEntity<List<DishDTO>> getDishesByRestaurant(@PathVariable Long id) {
+        try {
+            List<DishDTO> dishes = restaurantsService.getDishesByRestaurantId(id);
+            return ResponseEntity.ok(dishes);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

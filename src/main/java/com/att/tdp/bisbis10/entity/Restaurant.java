@@ -19,6 +19,9 @@ public class Restaurant {
     @Column(name = "is_kosher")
     private boolean isKosher;
 
+    @OneToMany(mappedBy = "restaurant")
+    private List<Rating> ratings;
+
     @ElementCollection
     @CollectionTable(name = "cuisines")
     @Column(name = "cuisines")
@@ -34,12 +37,15 @@ public class Restaurant {
 
     public Restaurant() {}
 
-    public Restaurant(Long id, String name, Boolean isKosher, Set<String> cuisines) {
+    public Restaurant(Long id, String name, Boolean isKosher, Set<String> cuisines, Set<Dish> dishes, List<Rating> ratings) {
         this.id = id;
         this.name = name;
         this.isKosher = isKosher;
         this.cuisines = cuisines;
+        this.dishes = dishes;
+        this.ratings = ratings;
     }
+
 
     public Long getId() {
         return this.id;
@@ -79,6 +85,14 @@ public class Restaurant {
 
    public void setDishes(Set<Dish> dishes) {
         this.dishes = dishes;
+   }
+
+   public List<Rating> getRatings() {
+        return this.ratings;
+   }
+
+   public void setRatings(List<Rating> ratings) {
+        this.ratings = ratings;
    }
 
 }

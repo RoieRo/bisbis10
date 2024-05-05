@@ -7,15 +7,16 @@ public class RestaurantListDTO {
     private String name;
     private boolean isKosher;
     private Set<String> cuisines;
+    private Double avgRating;
 
-    public RestaurantListDTO() {}
-
-    public RestaurantListDTO(Long id, String name, boolean isKosher, Set<String> cuisines) {
+    public RestaurantListDTO(Long id, String name, boolean isKosher,  Double avgRating) {
         this.id = id;
         this.name = name;
         this.isKosher = isKosher;
-        this.cuisines = cuisines;
+       this.avgRating = avgRating == null ? 0 : avgRating;
     }
+    public RestaurantListDTO() {}
+
 
     public void setId(Long id) {
         this.id = id;
@@ -48,4 +49,9 @@ public class RestaurantListDTO {
     public Set<String> getCuisines() {
         return this.cuisines;
     }
+
+    public void setAvgRating(Double avgRating) { this.avgRating = avgRating; }
+
+    public Double getAvgRating() { return avgRating; }
+
 }

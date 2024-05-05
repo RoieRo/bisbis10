@@ -2,17 +2,16 @@ package com.att.tdp.bisbis10.service;
 
 import com.att.tdp.bisbis10.dto.*;
 import com.att.tdp.bisbis10.entity.Dish;
+import com.att.tdp.bisbis10.entity.Rating;
 import com.att.tdp.bisbis10.entity.Restaurant;
+import com.att.tdp.bisbis10.mappers.DishMapper;
 import com.att.tdp.bisbis10.mappers.RestaurantMapper;
 import com.att.tdp.bisbis10.repositories.RestaurantRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,25 +23,38 @@ public class RestaurantService {
 
     private final DishService dishService;
 
+    private final DishMapper dishMapper;
+
     @Autowired
-    public RestaurantService(RestaurantRepository restaurantRepository,DishService dishService, RestaurantMapper mapper) {
+    public RestaurantService(RestaurantRepository restaurantRepository,DishService dishService, RestaurantMapper mapper, DishMapper dishMapper) {
         this.restaurantRepository = restaurantRepository;
         this.dishService = dishService;
         this.mapper = mapper;
+        this.dishMapper = dishMapper;
+    }
+    private Double _calcAvgRating(Restaurant restaurant){
+        return restaurant.getRatings().stream()
+                .mapToDouble(Rating::getRating)
+                .average()
+                .orElse(0.0);
     }
 
     public List<RestaurantListDTO> getAllRestaurants(String cuisine) {
         List<Restaurant> restaurants;
         if (cuisine != null && !cuisine.isEmpty()) {
-             restaurants = this.restaurantRepository.findByCuisine(cuisine);
+            restaurants = this.restaurantRepository.findByCuisine(cuisine);
         } else {
             restaurants = this.restaurantRepository.findAll();
         }
-
         return restaurants.stream()
-                .map(mapper::restaurantToListDto)
+                .map(restaurant -> {
+                    RestaurantListDTO dto = mapper.restaurantToListDto(restaurant);
+                    Double avgRating = this._calcAvgRating(restaurant);
+                    dto.setAvgRating(avgRating);
+                    return dto;
+                })
                 .collect(Collectors.toList());
-        }
+    }
 
     //Transactional used to define the scope of a single database transaction
     @Transactional
@@ -75,7 +87,10 @@ public class RestaurantService {
     public RestaurantDTO getRestaurantById(Long id) {
         Restaurant restaurant = restaurantRepository.findById(id)
                 .orElseThrow( () -> new RuntimeException("Restaurant not found"));
-        return this.mapper.restaurantToDto(restaurant);
+        RestaurantDTO dto = mapper.restaurantToDto(restaurant);
+        Double avgRating = this._calcAvgRating(restaurant);
+        dto.setAvgRating(avgRating);
+        return dto;
     }
 
     @Transactional
@@ -108,11 +123,13 @@ public class RestaurantService {
         dishService.deleteDish(dishId); // delete the PK
     }
 
-//    public List<DishDTO> getDishesByRestaurantId(Long restaurantId) {
-//        List<Dish> dishes = dishService.getDishesByRestaurantId(restaurantId);
-//        return dishes.stream()
-//                .map(dishMapper::dishToDto)
-//                .collect(Collectors.toList());
-//    }
+    public List<DishDTO> getDishesByRestaurantId(Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+
+        return restaurant.getDishes().stream()
+                .map(dishMapper::dishToDto)
+                .collect(Collectors.toList());
+    }
 }
 

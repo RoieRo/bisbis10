@@ -7,19 +7,19 @@ import java.util.Set;
 public class RestaurantDTO {
     private Long id;
     private String name;
-    // need to add AvgRatingDTO
     private boolean isKosher;
     private Set<String> cuisines;
     private List<DishDTO> dishes;
-
+    private Double avgRating;
     public RestaurantDTO() {}
 
-    public RestaurantDTO(Long id, String name, boolean isKosher, Set<String> cuisines) {
+    public RestaurantDTO(Long id, String name, boolean isKosher, Set<String> cuisines,Double avgRating) {
         this.id = id;
         this.name = name;
         this.isKosher = isKosher;
         this.cuisines = cuisines;
         this.dishes = new ArrayList<DishDTO>();
+        this.avgRating = avgRating;
     }
 
     public Long getId() {
@@ -60,6 +60,14 @@ public class RestaurantDTO {
 
     public void setDishes(List<DishDTO> dishes) {
         this.dishes = dishes;
+    }
+
+    public Double getAvgRating() {
+        return this.avgRating;
+    }
+
+    public void setAvgRating(Double avgRating) {
+        this.avgRating = avgRating;
     }
 
 }
