@@ -87,5 +87,32 @@ public class RestaurantService {
         restaurantRepository.save(restaurant);
     }
 
+    public void updateDish(Long id, Long dishId, UpdateDishDTO updateDishDTO) {
+        Restaurant restaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+
+        Dish dishToUpdate = dishService.getDishById(dishId);
+
+        dishService.updateDish(dishToUpdate, updateDishDTO);
+
+        restaurantRepository.save(restaurant);
+    }
+
+    @Transactional
+    public void deleteDish(Long id, Long dishId) {
+        Restaurant restaurant = restaurantRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+
+        Dish dishToDelete = dishService.getDishById(dishId);
+        restaurant.getDishes().remove(dishToDelete); // delete the FK
+        dishService.deleteDish(dishId); // delete the PK
+    }
+
+//    public List<DishDTO> getDishesByRestaurantId(Long restaurantId) {
+//        List<Dish> dishes = dishService.getDishesByRestaurantId(restaurantId);
+//        return dishes.stream()
+//                .map(dishMapper::dishToDto)
+//                .collect(Collectors.toList());
+//    }
 }
 

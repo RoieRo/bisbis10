@@ -78,21 +78,31 @@ public class RestaurantController {
 
     // update a dish
     @PutMapping("/{id}/dishes/{dishId}")
-    ResponseEntity<Boolean> updateDish(@PathVariable Long id, @PathVariable Long dishId) {
-        //dishService.updateDish(id, dishId, dish);
-        return ResponseEntity.ok(true);
+    public ResponseEntity<Void> updateDish(@PathVariable Long id, @PathVariable Long dishId, @RequestBody UpdateDishDTO updateDishDTO) {
+        try {
+            restaurantsService.updateDish(id, dishId, updateDishDTO);
+            return ResponseEntity.ok().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
-    // delete a dish
+//
+//    // delete a dish
     @DeleteMapping("/{id}/dishes/{dishId}")
     ResponseEntity<Void> deleteDish(@PathVariable Long id, @PathVariable Long dishId) {
-        //dishService.deleteDish(id, dishId);
+        restaurantsService.deleteDish(id, dishId);
         return ResponseEntity.noContent().build();
     }
 
     // get dishes by resturant
-    @GetMapping("/{id}/dishes")
-    ResponseEntity<Boolean> getDishesByRestaurant(@PathVariable Long id) {
-        //List<Dish> dishes = dishService.getDishesByRestaurant(id);
-        return ResponseEntity.ok(true);
-    }
+//    @GetMapping("/{id}/dishes")
+//    ResponseEntity<List<DishDTO>> getDishesByRestaurant(@PathVariable Long id) {
+//        try {
+//            List<DishDTO> dishes = restaurantsService.getDishesByRestaurantId(id);
+//            return ResponseEntity.ok(dishes);
+//        } catch (EntityNotFoundException e) {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
+
 }

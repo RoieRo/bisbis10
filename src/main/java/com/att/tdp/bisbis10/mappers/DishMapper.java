@@ -14,6 +14,10 @@ public interface DishMapper {
 
     Dish createDishToEntity(CreateDishDTO dto);
 
+    Dish updateDishToEntity(UpdateDishDTO dto);
+
+    DishDTO dishToDto(Dish dish);
+
     }
 
 
